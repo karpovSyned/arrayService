@@ -1,0 +1,51 @@
+version: "3.4"
+
+services:
+  client-service:
+    build:
+      context: ./client
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      REACT_APP_API_BASE_URL: http://localhost:3030
+    ports:
+      - 3000:3000
+    depends_on:
+      - client-arrays-service
+    command: sh -c "npm start"
+
+  client-arrays-service:
+    build:
+      context: ./client-arrays-service
+    volumes:
+      - ./client-arrays-service:/app
+      - /app/node_modules
+    environment:
+      SERVER_PORT: 3000
+      LOG_SERVER_PORT: 3000
+      LOG_SERVER_URL: http://log-service
+      LOG_SERVER_PATH: /logs
+    ports:
+      - 3030:3000
+    depends_on:
+      - log-service
+    command: sh -c "npm start"
+  
+  log-service:
+    build:
+      context: ./log-service
+    volumes:
+      - ./log-service:/app
+      - /app/node_modules
+    environment:
+      SERVER_PORT: 3000
+    ports:
+      - 3040:3000
+    command: sh -c "npm start"
+
+# Creates a network for this cluster
+networks:
+  default:
+    ipam:
+      driver: default
