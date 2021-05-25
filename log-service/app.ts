@@ -22,7 +22,9 @@ const loggerOptions: expressWinston.LoggerOptions = {
     winston.format.json(),
     winston.format.prettyPrint(),
     winston.format.colorize({ all: true })
-  )
+  ),
+  meta: false,
+  msg: "{{JSON.stringify(req.body)}}"
 };
 
 app.use(expressWinston.logger(loggerOptions));

@@ -27,10 +27,13 @@ const loggerOptions: expressWinston.LoggerOptions = {
     winston.format.json(),
     winston.format.prettyPrint(),
     winston.format.colorize({ all: true })
-  )
+  ),
+  msg: "HTTP {{req.method}} {{req.url}} {{JSON.stringify(req.body)}} => res.body = {{JSON.stringify(res.body)}}"
 };
 
 app.use(expressWinston.logger(loggerOptions));
+expressWinston.requestWhitelist.push('body');
+expressWinston.responseWhitelist.push('body');
 
 routes.push(new ArraysRoutes(app));
 
